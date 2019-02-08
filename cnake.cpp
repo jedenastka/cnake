@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <utility>
-//#include <ncurses.h>
+#include <ncurses.h>
 
 int random(int from, int to) {
     return rand() % (to + 1) + from;
@@ -91,7 +91,7 @@ void Game::start() {
 
 void Game::over() {
     draw(1);
-    std::cout << "Game over!\n";
+    printw("Game over!\n";
     exit(0);
 }
 
@@ -153,28 +153,31 @@ void Game::draw(bool dead) {
         snakeHeadDraw = 3;
     }
     screen[std::get<0>(snakeHead)][std::get<1>(snakeHead)] = snakeHeadDraw;
+    clear();
     for (int i = 0; i < 24; i++) {
         for (int j = 0; j < 80; j++) {
             if (screen[j][i] == 0) {
-                std::cout << " ";
+                printw(" ");
             } else if (screen[j][i] == 1) {
-                std::cout << "#";
+                printw("#");
             } else if (screen[j][i] == 2) {
-                std::cout << "@";
+                printw("@");
             } else if (screen[j][i] == 3) {
-                std::cout << "X";
+                printw("X");
             } else if (screen[j][i] == 4) {
-                std::cout << "$";
+                printw("$");
             } else if (screen[j][i] == 5) {
-                std::cout << "%";
+                printw("%");
             }
         }
-        std::cout << "\n";
+        //printw("\n");
     }
 }
 
 int main() {
     srand(time(NULL));
+    initscr();
     Game game;
     game.start();
+    endwin();
 }
