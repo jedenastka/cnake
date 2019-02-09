@@ -11,15 +11,15 @@ int random(int from, int to) {
 
 class Snake {
     public:
-        Snake();
+        Snake(int startingSize);
         void move(std::pair<int, int> direction, bool makeBigger);
         std::vector<std::pair<int, int>> getBody();
     private:
         std::vector<std::pair<int, int>> body;
 };
 
-Snake::Snake() {
-    for (int i = 1; i <= 7; i++) {
+Snake::Snake(int startingSize) {
+    for (int i = 1; i <= startingSize; i++) {
         body.push_back(std::make_pair(i, 1));
     }
 }
@@ -38,12 +38,13 @@ std::vector<std::pair<int, int>> Snake::getBody() {
 
 class Game {
     public:
-        Game(int widthArg, int heightArg, int tickTimeArg);
+        Game(int widthArg, int heightArg, int tickTimeArg, int startingSizeSnake);
         void start();
     private:
         // settings
         int width, height;
         int tickTime;
+        int startingSizeSnake;
         // objects
         Snake snake;
         std::vector<std::pair<int, int>> rocks;
@@ -64,7 +65,10 @@ class Game {
         void draw(bool dead);
 };
 
-Game::Game(int widthArg, int heightArg, int tickTimeArg) {
+Game::Game(int widthArg, int heightArg, int tickTimeArg, int startingSizeSnake)
+    : snake(3)
+    , directions{std::make_pair(0, -1), std::make_pair(1, 0), std::make_pair(0, 1), std::make_pair(-1, 0)}
+    {
     // set settings
     width = widthArg;
     height = heightArg;
@@ -86,11 +90,11 @@ Game::Game(int widthArg, int heightArg, int tickTimeArg) {
         map[i][24-1] = 4;*/
     }
     // directions
-    directions[0] = std::make_pair(0, -1);
+    /*directions[0] = std::make_pair(0, -1);
     directions[1] = std::make_pair(1, 0);
     directions[2] = std::make_pair(0, 1);
-    directions[3] = std::make_pair(-1, 0);
-    directionIndicator = 2;
+    directions[3] = std::make_pair(-1, 0);*/
+    directionIndicator = 1;
 }
 
 void Game::start() {
@@ -157,7 +161,7 @@ void Game::tick() {
     }
     if (apple == snakeHead) {
         appleCollected = 1;
-        apple = std::make_pair(random(0, 79), random(0, 23));
+        apple = randomApple();
     }
     snake.move(direction, appleCollected);
     appleCollected = 0;
@@ -210,7 +214,7 @@ void Game::draw(bool dead) {
 int main() {
     srand(time(NULL));
     initscr();
-    Game game(80, 24, 500);
+    Game game(80, 24, 500, 3);
     game.start();
     endwin();
 }
