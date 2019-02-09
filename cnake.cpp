@@ -151,7 +151,7 @@ void Game::tick() {
 }
 
 void Game::draw(bool dead) {
-    refresh();
+    wrefresh(win);
     for (int i = 0; i < 80; i++) {
         for (int j = 0; j < 24; j++) {
             screen[i][j] = 0;
@@ -173,7 +173,7 @@ void Game::draw(bool dead) {
         snakeHeadDraw = 3;
     }
     screen[std::get<0>(snakeHead)][std::get<1>(snakeHead)] = snakeHeadDraw;
-    clear();
+    wclear(win);
     for (int i = 0; i < 24; i++) {
         for (int j = 0; j < 80; j++) {
             if (screen[j][i] == 0) {
