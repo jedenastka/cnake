@@ -38,25 +38,42 @@ std::vector<std::pair<int, int>> Snake::getBody() {
 
 class Game {
     public:
-        Game();
+        Game(int widthArg, int heightArg, int tickTimeArg);
         void start();
     private:
+        // settings
+        int width, height;
+        int tickTime;
+        // objects
         Snake snake;
         std::vector<std::pair<int, int>> rocks;
-        int tickTime;
         std::pair<int, int> apple;
         bool appleCollected;
+        // directions
         std::pair<int, int> direction;
         int directionIndicator;
         std::pair<int, int> directions[4];
+        // screen
         int screen[80][24];
+        WINDOW* win;
+        // functions
+        std::pair<int, int> randomApple();
         void over();
         void input();
         void tick();
         void draw(bool dead);
 };
 
-Game::Game() {
+Game::Game(int widthArg, int heightArg, int tickTimeArg) {
+    // set settings
+    width = widthArg;
+    height = heightArg;
+    tickTime = tickTimeArg;
+    // make a win and configure
+    win = newwin(height, width, 0, 0);
+    keypad(win, 1);
+    nodelay(win, 1);
+    // make map (rocks)
     for (int i = 0; i < 24; i++) {
         rocks.push_back(std::make_pair(0, i));
         rocks.push_back(std::make_pair(80-1, i));
@@ -69,24 +86,27 @@ Game::Game() {
         /*map[i][0] = 4;
         map[i][24-1] = 4;*/
     }
+    // directions
     directions[0] = std::make_pair(1, 0);
     directions[1] = std::make_pair(0, 1);
     directions[2] = std::make_pair(-1, 0);
     directions[3] = std::make_pair(0, -1);
-
     directionIndicator = 0;
 }
 
 void Game::start() {
-    tickTime = 1000;
     appleCollected = 0;
-    apple = std::make_pair(random(0, 79), random(0, 23));
+    apple = randomApple();
     while (1) {
         input();
         draw(0);
         tick();
-        system("sleep 0.5");
+        slk_refresh_sp()
     }
+}
+
+std::pair<int, int> randomApple() {
+    return std::make_pair(random(0, width-1), random(0, height-1));
 }
 
 void Game::over() {
@@ -180,6 +200,6 @@ int main() {
     srand(time(NULL));
     initscr();
     Game game;
-    game.start();
+    game.start(80, 24);
     endwin();
 }
