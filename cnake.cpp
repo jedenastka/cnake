@@ -68,11 +68,14 @@ class Game {
 Game::Game(int widthArg, int heightArg, int tickTimeArg, int startingSizeSnake)
     : snake(3)
     , directions{std::make_pair(0, -1), std::make_pair(1, 0), std::make_pair(0, 1), std::make_pair(-1, 0)}
+    , width(widthArg)
+    , height(heightArg)
+    , tickTime(tickTimeArg)
     {
     // set settings
-    width = widthArg;
+    /*width = widthArg;
     height = heightArg;
-    tickTime = tickTimeArg;
+    tickTime = tickTimeArg;*/
     // make a win and configure
     win = newwin(height, width, 0, 0);
     keypad(win, 1);
@@ -94,13 +97,13 @@ Game::Game(int widthArg, int heightArg, int tickTimeArg, int startingSizeSnake)
     directions[1] = std::make_pair(1, 0);
     directions[2] = std::make_pair(0, 1);
     directions[3] = std::make_pair(-1, 0);*/
-    directionIndicator = 1;
 }
 
 void Game::start() {
     nodelay(win, 1);
     appleCollected = 0;
     apple = randomApple();
+    directionIndicator = 1;
     while (1) {
         input();
         tick();
