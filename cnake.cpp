@@ -72,7 +72,6 @@ Game::Game(int widthArg, int heightArg, int tickTimeArg) {
     // make a win and configure
     win = newwin(height, width, 0, 0);
     keypad(win, 1);
-    nodelay(win, 1);
     // make map (rocks)
     for (int i = 0; i < 24; i++) {
         rocks.push_back(std::make_pair(0, i));
@@ -95,6 +94,7 @@ Game::Game(int widthArg, int heightArg, int tickTimeArg) {
 }
 
 void Game::start() {
+    nodelay(win, 1);
     appleCollected = 0;
     apple = randomApple();
     while (1) {
@@ -111,12 +111,13 @@ std::pair<int, int> Game::randomApple() {
 void Game::over() {
     draw(1);
     printw("Game over!\n");
+    nodelay(win, 0);
     endwin();
     exit(0);
 }
 
 void Game::input() {
-    timeout(tickTime);
+    wtimeout(win, tickTime);
     char key = wgetch(win);
     if (/*random(0, 3) > 2*/key == KEY_RIGHT) {
         directionIndicator++;
