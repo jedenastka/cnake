@@ -133,6 +133,7 @@ void Game::tick() {
 }
 
 void Game::draw(bool dead) {
+    refresh();
     for (int i = 0; i < 80; i++) {
         for (int j = 0; j < 24; j++) {
             screen[i][j] = 0;
@@ -168,7 +169,7 @@ void Game::draw(bool dead) {
             } else if (screen[j][i] == 4) {
                 printw("$");
             } else if (screen[j][i] == 5) {
-                printw("%");
+                printw("%%");
             }
         }
         //printw("\n");
@@ -178,7 +179,6 @@ void Game::draw(bool dead) {
 int main() {
     srand(time(NULL));
     initscr();
-    printw("test");
     Game game;
     game.start();
     endwin();
