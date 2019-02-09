@@ -42,9 +42,8 @@ class Game {
         void start();
     private:
         // settings
-        int width, height;
-        int tickTime;
-        int startingSizeSnake;
+        const int width, height;
+        const int tickTime;
         // objects
         Snake snake;
         std::vector<std::pair<int, int>> rocks;
@@ -66,16 +65,12 @@ class Game {
 };
 
 Game::Game(int widthArg, int heightArg, int tickTimeArg, int startingSizeSnake)
-    : snake(3)
+    : snake(startingSizeSnake)
     , directions{std::make_pair(0, -1), std::make_pair(1, 0), std::make_pair(0, 1), std::make_pair(-1, 0)}
     , width(widthArg)
     , height(heightArg)
     , tickTime(tickTimeArg)
     {
-    // set settings
-    /*width = widthArg;
-    height = heightArg;
-    tickTime = tickTimeArg;*/
     // make a win and configure
     win = newwin(height, width, 0, 0);
     keypad(win, 1);
@@ -92,11 +87,6 @@ Game::Game(int widthArg, int heightArg, int tickTimeArg, int startingSizeSnake)
         /*map[i][0] = 4;
         map[i][24-1] = 4;*/
     }
-    // directions
-    /*directions[0] = std::make_pair(0, -1);
-    directions[1] = std::make_pair(1, 0);
-    directions[2] = std::make_pair(0, 1);
-    directions[3] = std::make_pair(-1, 0);*/
 }
 
 void Game::start() {
@@ -136,16 +126,6 @@ void Game::input() {
     } else if (key == KEY_LEFT) {
         directionIndicator = 3;
     }
-    /*if (key == KEY_RIGHT) {
-        directionIndicator++;
-    } else if (key == KEY_LEFT) {
-        directionIndicator--;
-    }
-    if (directionIndicator == -1) {
-        directionIndicator = 3;
-    } else if (directionIndicator == 4) {
-        directionIndicator = 0;
-    }*/
 }
 
 void Game::tick() {
@@ -210,7 +190,6 @@ void Game::draw(bool dead) {
                 printw("%%");
             }
         }
-        //printw("\n");
     }
 }
 
