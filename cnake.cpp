@@ -86,11 +86,11 @@ Game::Game(int widthArg, int heightArg, int tickTimeArg) {
         map[i][24-1] = 4;*/
     }
     // directions
-    directions[0] = std::make_pair(1, 0);
-    directions[1] = std::make_pair(0, 1);
-    directions[2] = std::make_pair(-1, 0);
-    directions[3] = std::make_pair(0, -1);
-    directionIndicator = 0;
+    directions[0] = std::make_pair(0, -1);
+    directions[1] = std::make_pair(1, 0);
+    directions[2] = std::make_pair(0, 1);
+    directions[3] = std::make_pair(-1, 0);
+    directionIndicator = 2;
 }
 
 void Game::start() {
@@ -99,8 +99,8 @@ void Game::start() {
     apple = randomApple();
     while (1) {
         input();
-        draw(0);
         tick();
+        draw(0);
     }
 }
 
@@ -118,17 +118,26 @@ void Game::over() {
 
 void Game::input() {
     wtimeout(win, tickTime);
-    char key = wgetch(win);
-    if (/*random(0, 3) > 2*/key == KEY_RIGHT) {
+    auto key = wgetch(win);
+    if (key == KEY_UP) {
+        directionIndicator = 0;
+    } else if (key == KEY_RIGHT) {
+        directionIndicator = 1;
+    } else if (key == KEY_DOWN) {
+        directionIndicator = 2;
+    } else if (key == KEY_LEFT) {
+        directionIndicator = 3;
+    }
+    /*if (key == KEY_RIGHT) {
         directionIndicator++;
-    } else if (/*random(0, 3) > 2*/key == KEY_LEFT) {
+    } else if (key == KEY_LEFT) {
         directionIndicator--;
     }
     if (directionIndicator == -1) {
         directionIndicator = 3;
     } else if (directionIndicator == 4) {
         directionIndicator = 0;
-    }
+    }*/
 }
 
 void Game::tick() {
