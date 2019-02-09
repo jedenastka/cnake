@@ -101,11 +101,10 @@ void Game::start() {
         input();
         draw(0);
         tick();
-        slk_refresh_sp()
     }
 }
 
-std::pair<int, int> randomApple() {
+std::pair<int, int> Game::randomApple() {
     return std::make_pair(random(0, width-1), random(0, height-1));
 }
 
@@ -117,9 +116,11 @@ void Game::over() {
 }
 
 void Game::input() {
-    if (random(0, 3) > 2/*rightArrow*/) {
+    timeout(tickTime);
+    char key = wgetch(win);
+    if (/*random(0, 3) > 2*/key == KEY_RIGHT) {
         directionIndicator++;
-    } else if (random(0, 3) > 2/*leftArrow*/) {
+    } else if (/*random(0, 3) > 2*/key == KEY_LEFT) {
         directionIndicator--;
     }
     if (directionIndicator == -1) {
@@ -127,7 +128,6 @@ void Game::input() {
     } else if (directionIndicator == 4) {
         directionIndicator = 0;
     }
-    // not implemented yet
 }
 
 void Game::tick() {
@@ -200,6 +200,6 @@ int main() {
     srand(time(NULL));
     initscr();
     Game game;
-    game.start(80, 24);
+    game.start(80, 24, 500);
     endwin();
 }
