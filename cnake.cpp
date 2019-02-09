@@ -199,7 +199,7 @@ void Game::draw(bool dead) {
 int main() {
     srand(time(NULL));
     initscr();
-    Game game;
-    game.start(80, 24, 500);
+    Game game(80, 24, 500);
+    game.start();
     endwin();
 }
