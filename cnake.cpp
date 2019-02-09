@@ -177,17 +177,17 @@ void Game::draw(bool dead) {
     for (int i = 0; i < 24; i++) {
         for (int j = 0; j < 80; j++) {
             if (screen[j][i] == 0) {
-                printw(" ");
+                wprintw(win, " ");
             } else if (screen[j][i] == 1) {
-                printw("#");
+                wprintw(win, "#");
             } else if (screen[j][i] == 2) {
-                printw("@");
+                wprintw(win, "@");
             } else if (screen[j][i] == 3) {
-                printw("X");
+                wprintw(win, "X");
             } else if (screen[j][i] == 4) {
-                printw("$");
+                wprintw(win, "$");
             } else if (screen[j][i] == 5) {
-                printw("%%");
+                wprintw(win, "%%");
             }
         }
     }
