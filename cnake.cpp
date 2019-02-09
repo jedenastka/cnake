@@ -91,7 +91,8 @@ void Game::start() {
 
 void Game::over() {
     draw(1);
-    printw("Game over!\n";
+    printw("Game over!\n");
+    endwin();
     exit(0);
 }
 
@@ -177,6 +178,7 @@ void Game::draw(bool dead) {
 int main() {
     srand(time(NULL));
     initscr();
+    printw("test");
     Game game;
     game.start();
     endwin();
