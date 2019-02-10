@@ -102,7 +102,7 @@ void Game::start() {
 }
 
 std::pair<int, int> Game::randomApple() {
-    return std::make_pair(random(0, width-1), random(0, height-1));
+    return std::make_pair(random(0+1, width-2), random(0+1, height-2));
 }
 
 void Game::over() {
