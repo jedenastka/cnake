@@ -4,6 +4,9 @@
 #include <ctime>
 #include <utility>
 #include <ncurses.h>
+#include <string>
+
+std::string version = "1.1b";
 
 int random(int from, int to) {
     return rand() % (to + 1) + from;
