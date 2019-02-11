@@ -10,4 +10,4 @@
 
 - [ ] Tick skipping bug
 - [ ] $ spawning under the rock
-- [ ] Going in opposite direction
+- [x] Going in opposite direction

@@ -120,6 +120,7 @@ void Game::over() {
 void Game::input() {
     wtimeout(win, tickTime);
     auto key = wgetch(win);
+    int oldDirectionIndicator = directionIndicator;
     if (key == KEY_UP) {
         directionIndicator = 0;
     } else if (key == KEY_RIGHT) {
@@ -128,6 +129,10 @@ void Game::input() {
         directionIndicator = 2;
     } else if (key == KEY_LEFT) {
         directionIndicator = 3;
+    }
+    // prevent from going to opposite direction
+    if (oldDirectionIndicator-2 == directionIndicator || oldDirectionIndicator+2 == directionIndicator) {
+        directionIndicator = oldDirectionIndicator;
     }
 }
 
