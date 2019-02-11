@@ -4,6 +4,7 @@
 - [ ] Main menu
 - [ ] Settings like starting speed or map size
 - [ ] Custom maps
+- [ ] Cleaning code
 
 # Bugs
 
