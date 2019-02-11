@@ -23,7 +23,7 @@ class Snake {
 
 Snake::Snake(int startingSize) {
     for (int i = 1; i <= startingSize; i++) {
-        body.push_back(std::make_pair(i, 1));
+        body.push_back(std::make_pair(i+1, 2));
     }
 }
 
