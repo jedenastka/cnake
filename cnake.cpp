@@ -1,15 +1,23 @@
-#include <iostream>
+#include <ncurses.h>
 #include <vector>
 #include <cstdlib>
 #include <ctime>
 #include <utility>
-#include <ncurses.h>
 #include <string>
+#include <chrono>
+#include <iostream>
+#include <thread>
 
 std::string version = "1.1b";
 
 int random(int from, int to) {
     return rand() % (to + 1) + from;
+}
+
+void input(WINDOW* win, int &key) {
+    while (1) {
+        key = wgetch(win);
+    }
 }
 
 class Snake {
@@ -62,9 +70,10 @@ class Game {
         // functions
         std::pair<int, int> randomApple();
         void over();
-        void input();
         void tick();
         void draw(bool dead);
+        // input
+        int key;
 };
 
 Game::Game(int widthArg, int heightArg, int tickTimeArg, int startingSizeSnake)
@@ -77,6 +86,7 @@ Game::Game(int widthArg, int heightArg, int tickTimeArg, int startingSizeSnake)
     // make a win and configure
     win = newwin(height, width, 0, 0);
     keypad(win, 1);
+    notimeout(win, 1);
     // make map (rocks)
     for (int i = 0; i < 24; i++) {
         rocks.push_back(std::make_pair(0, i));
@@ -92,13 +102,16 @@ Game::Game(int widthArg, int heightArg, int tickTimeArg, int startingSizeSnake)
     }
 }
 
+
+
 void Game::start() {
-    nodelay(win, 1);
+    std::thread inputThread(input, win, std::ref(key));
+    //nodelay(win, 1);
     appleCollected = 0;
     apple = randomApple();
     directionIndicator = 1;
     while (1) {
-        input();
+        std::this_thread::sleep_for(std::chrono::seconds(1));
         tick();
         draw(0);
     }
@@ -117,9 +130,19 @@ void Game::over() {
     exit(0);
 }
 
-void Game::input() {
+/*void Game::input() {
     wtimeout(win, tickTime);
+    auto start = std::chrono::high_resolution_clock::now();
     auto key = wgetch(win);
+    if (key != ERR) {
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsed = end - start;
+        wrefresh(win);
+        std::this_thread::sleep_for(std::chrono::milliseconds(tickTime) - elapsed);
+    }
+}*/
+
+void Game::tick() {
     int oldDirectionIndicator = directionIndicator;
     if (key == KEY_UP) {
         directionIndicator = 0;
@@ -134,9 +157,7 @@ void Game::input() {
     if (oldDirectionIndicator-2 == directionIndicator || oldDirectionIndicator+2 == directionIndicator) {
         directionIndicator = oldDirectionIndicator;
     }
-}
 
-void Game::tick() {
     direction = directions[directionIndicator];
     auto snakeBody = snake.getBody();
     auto snakeHead = snakeBody.back();
