@@ -1,14 +1,10 @@
 #include <ncurses.h>
 #include <vector>
-#include <cstdlib>
 #include <ctime>
-#include <utility>
-#include <string>
 #include <chrono>
-#include <iostream>
 #include <thread>
 
-std::string version = "1.1b";
+std::string version = "1.2.0";
 
 int random(int from, int to) {
     return rand() % (to + 1) + from;
@@ -86,19 +82,14 @@ Game::Game(int widthArg, int heightArg, int tickTimeArg, int startingSizeSnake)
     // make a win and configure
     win = newwin(height, width, 0, 0);
     keypad(win, 1);
-    notimeout(win, 1);
     // make map (rocks)
     for (int i = 0; i < 24; i++) {
         rocks.push_back(std::make_pair(0, i));
         rocks.push_back(std::make_pair(80-1, i));
-        /*map[0][i] = 4;
-        map[80-1][i] = 4;*/
     }
     for (int i = 0; i < 80; i++) {
         rocks.push_back(std::make_pair(i, 0));
         rocks.push_back(std::make_pair(i, 24-1));
-        /*map[i][0] = 4;
-        map[i][24-1] = 4;*/
     }
 }
 
@@ -106,14 +97,13 @@ Game::Game(int widthArg, int heightArg, int tickTimeArg, int startingSizeSnake)
 
 void Game::start() {
     std::thread inputThread(input, win, std::ref(key));
-    //nodelay(win, 1);
     appleCollected = 0;
     apple = randomApple();
     directionIndicator = 1;
     while (1) {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
         tick();
         draw(0);
+        std::this_thread::sleep_for(std::chrono::milliseconds(tickTime));
     }
 }
 
@@ -129,18 +119,6 @@ void Game::over() {
     endwin();
     exit(0);
 }
-
-/*void Game::input() {
-    wtimeout(win, tickTime);
-    auto start = std::chrono::high_resolution_clock::now();
-    auto key = wgetch(win);
-    if (key != ERR) {
-        auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double, std::milli> elapsed = end - start;
-        wrefresh(win);
-        std::this_thread::sleep_for(std::chrono::milliseconds(tickTime) - elapsed);
-    }
-}*/
 
 void Game::tick() {
     int oldDirectionIndicator = directionIndicator;
