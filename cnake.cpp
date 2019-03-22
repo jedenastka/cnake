@@ -26,6 +26,7 @@ class Snake {
 };
 
 Snake::Snake(int startingSize) {
+	// make snake body
     for (int i = 1; i <= startingSize; i++) {
         body.push_back(std::make_pair(i+1, 2));
     }
@@ -33,8 +34,10 @@ Snake::Snake(int startingSize) {
 
 void Snake::move(std::pair<int, int> direction, bool makeBigger) {
     if (!makeBigger) {
+		// delete tail
         body.erase(body.begin());
     }
+    // make new head
     std::pair<int, int> newHead = std::make_pair(std::get<0>(body.back()) + std::get<0>(direction), std::get<1>(body.back()) + std::get<1>(direction));
     body.push_back(newHead);
 }
@@ -55,7 +58,6 @@ class Game {
         Snake snake;
         std::vector<std::pair<int, int>> rocks;
         std::pair<int, int> apple;
-        bool appleCollected;
         // directions
         std::pair<int, int> direction;
         int directionIndicator;
@@ -67,9 +69,12 @@ class Game {
         std::pair<int, int> randomApple();
         void over();
         void tick();
-        void draw(bool dead);
+        void draw();
         // input
         int key;
+        // triggers
+        bool isDead;
+        bool appleCollected;
 };
 
 Game::Game(int widthArg, int heightArg, int tickTimeArg, int startingSizeSnake)
@@ -83,6 +88,7 @@ Game::Game(int widthArg, int heightArg, int tickTimeArg, int startingSizeSnake)
     win = newwin(height, width, 0, 0);
     keypad(win, 1);
     // make map (rocks)
+    // TODO: custom maps
     for (int i = 0; i < 24; i++) {
         rocks.push_back(std::make_pair(0, i));
         rocks.push_back(std::make_pair(80-1, i));
@@ -96,25 +102,31 @@ Game::Game(int widthArg, int heightArg, int tickTimeArg, int startingSizeSnake)
 
 
 void Game::start() {
+	// thread for getting input
     std::thread inputThread(input, win, std::ref(key));
+    // zeroing
     appleCollected = 0;
+    isDead = 0;
     apple = randomApple();
     directionIndicator = 1;
-    while (1) {
+    while (!isDead) {
+		// game loop
         tick();
-        draw(0);
+        draw();
+        // sleep between ticks
         std::this_thread::sleep_for(std::chrono::milliseconds(tickTime));
     }
+    draw();
 }
 
 std::pair<int, int> Game::randomApple() {
+	// return random apple position
+	// TODO: bug with dissapearing apple
     return std::make_pair(random(0+1, width-2), random(0+1, height-2));
 }
 
 void Game::over() {
-    draw(1);
     refresh();
-    nodelay(win, 0);
     wgetch(win);
     endwin();
     exit(0);
@@ -139,25 +151,26 @@ void Game::tick() {
     direction = directions[directionIndicator];
     auto snakeBody = snake.getBody();
     auto snakeHead = snakeBody.back();
-    for (auto itr = snakeBody.begin(); itr != snakeBody.end() - 1; ++itr) {
-        if (*itr == snakeHead) {
-            over();
-        }
-    }
-    for (auto i: rocks) {
-        if (snakeHead == i) {
-            over();
-        }
-    }
     if (apple == snakeHead) {
         appleCollected = 1;
         apple = randomApple();
     }
     snake.move(direction, appleCollected);
     appleCollected = 0;
+    // check for dead
+    for (auto itr = snakeBody.begin(); itr != snakeBody.end() - 1; ++itr) {
+        if (*itr == snakeHead) {
+            isDead = 1;
+        }
+    }
+    for (auto i: rocks) {
+        if (snakeHead == i) {
+            isDead = 1;
+        }
+    }
 }
 
-void Game::draw(bool dead) {
+void Game::draw() {
     wrefresh(win);
     for (int i = 0; i < 80; i++) {
         for (int j = 0; j < 24; j++) {
@@ -174,7 +187,7 @@ void Game::draw(bool dead) {
         screen[std::get<0>(i)][std::get<1>(i)] = 5;
     }
     int snakeHeadDraw;
-    if (!dead) {
+    if (!isDead) {
         snakeHeadDraw = 2;
     } else {
         snakeHeadDraw = 3;
