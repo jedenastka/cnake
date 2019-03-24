@@ -7,7 +7,7 @@
 std::string version = "1.2.0";
 
 int random(int from, int to) {
-    return rand() % (to + 1) + from;
+    return rand() % to + 1 + from;
 }
 
 void input(WINDOW* win, int &key) {
@@ -111,25 +111,27 @@ void Game::start() {
     directionIndicator = 1;
     while (!isDead) {
 		// game loop
+        draw();
         tick();
         draw();
         // sleep between ticks
         std::this_thread::sleep_for(std::chrono::milliseconds(tickTime));
     }
     draw();
+    refresh();
+    wgetch(win);
+    endwin();
+    exit(0);
 }
 
 std::pair<int, int> Game::randomApple() {
 	// return random apple position
 	// TODO: bug with dissapearing apple
-    return std::make_pair(random(0+1, width-2), random(0+1, height-2));
+    return std::make_pair(random(0+1, width-1-1), random(0+1, height-1-1));
 }
 
 void Game::over() {
-    refresh();
-    wgetch(win);
-    endwin();
-    exit(0);
+    
 }
 
 void Game::tick() {
@@ -151,12 +153,6 @@ void Game::tick() {
     direction = directions[directionIndicator];
     auto snakeBody = snake.getBody();
     auto snakeHead = snakeBody.back();
-    if (apple == snakeHead) {
-        appleCollected = 1;
-        apple = randomApple();
-    }
-    snake.move(direction, appleCollected);
-    appleCollected = 0;
     // check for dead
     for (auto itr = snakeBody.begin(); itr != snakeBody.end() - 1; ++itr) {
         if (*itr == snakeHead) {
@@ -168,6 +164,16 @@ void Game::tick() {
             isDead = 1;
         }
     }
+    if (isDead) {
+        return;
+    }
+    // apple collecting
+    if (apple == snakeHead) {
+        appleCollected = 1;
+        apple = randomApple();
+    }
+    snake.move(direction, appleCollected);
+    appleCollected = 0;
 }
 
 void Game::draw() {
@@ -177,7 +183,6 @@ void Game::draw() {
             screen[i][j] = 0;
         }
     }
-    screen[std::get<0>(apple)][std::get<1>(apple)] = 4;
     auto snakeBody = snake.getBody();
     auto snakeHead = snakeBody.back();
     for (auto i: snakeBody) {
@@ -186,6 +191,7 @@ void Game::draw() {
     for (auto i: rocks) {
         screen[std::get<0>(i)][std::get<1>(i)] = 5;
     }
+    screen[std::get<0>(apple)][std::get<1>(apple)] = 4;
     int snakeHeadDraw;
     if (!isDead) {
         snakeHeadDraw = 2;
