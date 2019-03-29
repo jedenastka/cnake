@@ -120,7 +120,8 @@ void Game::start() {
     refresh();
     wgetch(win);
     endwin();
-    exit(0);
+    inputThread.detach();
+    return;
 }
 
 std::pair<int, int> Game::randomApple() {
