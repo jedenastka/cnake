@@ -67,7 +67,6 @@ class Game {
         WINDOW* win;
         // functions
         std::pair<int, int> randomApple();
-        void over();
         void tick();
         void draw();
         // input
@@ -128,10 +127,6 @@ std::pair<int, int> Game::randomApple() {
 	// return random apple position
 	// TODO: bug with dissapearing apple
     return std::make_pair(random(0+1, width-1-1), random(0+1, height-1-1));
-}
-
-void Game::over() {
-    
 }
 
 void Game::tick() {
