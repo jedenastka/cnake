@@ -4,14 +4,14 @@
 #include <chrono>
 #include <thread>
 
-std::string version = "1.2.0";
+std::string version = "1.2.3";
 
 int random(int from, int to) {
     return rand() % to + 1 + from;
 }
 
-void input(WINDOW* win, int &key) {
-    while (1) {
+void input(WINDOW* win, int &key, bool &kill) {
+    while (!kill) {
         key = wgetch(win);
     }
 }
@@ -101,8 +101,9 @@ Game::Game(int widthArg, int heightArg, int tickTimeArg, int startingSizeSnake)
 
 
 void Game::start() {
-	// thread for getting input
-    std::thread inputThread(input, win, std::ref(key));
+	// thread for getting input (and variable to kill it if needed)
+    bool killThread = 0;
+    std::thread inputThread(input, win, std::ref(key), std::ref(killThread));
     // zeroing
     appleCollected = 0;
     isDead = 0;
@@ -117,10 +118,13 @@ void Game::start() {
         std::this_thread::sleep_for(std::chrono::milliseconds(tickTime));
     }
     draw();
+    killThread = 1;
+    inputThread.join();
     refresh();
     wgetch(win);
     endwin();
-    inputThread.detach();
+    clear();
+    refresh();
     return;
 }
 
@@ -215,10 +219,15 @@ void Game::draw() {
     }
 }
 
+void menu() {}
+
 int main() {
     srand(time(NULL));
     initscr();
     Game game(80, 24, 500, 3);
     game.start();
+    clear();
+    /*printw("");
+    getch();*/
     endwin();
 }
