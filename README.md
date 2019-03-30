@@ -26,4 +26,4 @@ It's more complicated I think.
 6. Copy `pdcurses.dll` here
 7. Change directory to this one
 8. Change the cnake.cpp file. 1st line, `#include <ncurses.h>`, need to be changed into `#include <curses.h>` (difference is `n` letter)
-9. `g++ -IC:\pdcurses -L. cnake.cpp -lpdcurses -static-libstdc++ -o cnake.exe`
+9. `g++ -IC:\pdcurses -L. cnake.cpp -lpdcurses -static-libstdc++ -static-libgcc -o cnake.exe`
