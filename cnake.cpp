@@ -4,7 +4,7 @@
 #include <chrono>
 #include <thread>
 
-std::string version = "1.2.3";
+#define VERSION "1.2.4"
 
 int random(int from, int to) {
     return rand() % to + 1 + from;
@@ -219,15 +219,17 @@ void Game::draw() {
     }
 }
 
-void menu() {}
+void menu() {
+    printw("cnake v%s\n", VERSION);
+    getch();
+    Game game(80, 24, 500, 3);
+    game.start();
+    clear();
+}
 
 int main() {
     srand(time(NULL));
     initscr();
-    Game game(80, 24, 500, 3);
-    game.start();
-    clear();
-    /*printw("");
-    getch();*/
+    menu();
     endwin();
 }
