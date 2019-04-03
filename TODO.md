@@ -9,10 +9,12 @@
 
 ## Bugs
 
-- [ ] Tick skipping bug
-- [ ] $ spawning under the rock
+- [x] Tick skipping bug
+- [ ] $ spawning under the rock (or... nowhere?)
 - [x] Going in opposite direction
+- [ ] Hoppy ticks aometimes
 
 ## Others
 
-- [ ] Cleaning code
+- [x] Cleaning code
+- [ ] Dividing code to multiple files
