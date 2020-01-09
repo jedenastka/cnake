@@ -16,7 +16,7 @@ void game(std::pair<int, int> size, std::map<std::pair<int, int>, int> objectMap
     }
     initscr();
     noecho();
-    WINDOW* win = newwin(size.first, size.second, 0, 0);
+    WINDOW* win = newwin(size.second, size.first, 0, 0);
     keypad(win, 1);
     std::pair<int, int> direction;
     bool quit = 0;
@@ -76,5 +76,5 @@ void moveSnake(std::vector<std::pair<int, int>> &snake, int x, int y) {
 
 int main() {
     std::map<std::pair<int, int>, int> objectMap;
-    game(std::make_pair(24, 80), objectMap, 3);
+    game(std::make_pair(80, 24), objectMap, 3);
 }
