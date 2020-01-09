@@ -5,7 +5,7 @@
 
 void draw(WINDOW *win, std::map<std::pair<int, int>, int> objectMap, std::vector<std::pair<int, int>> snake);
 
-char getInput(WINDOW *win);
+void input(WINDOW *win, std::pair<int, int> &direction, bool &quit);
 
 void tick(std::vector<std::pair<int, int>> &snake);
 
@@ -17,11 +17,16 @@ void game(std::pair<int, int> size, std::map<std::pair<int, int>, int> objectMap
     initscr();
     noecho();
     WINDOW* win = newwin(size.first, size.second, 0, 0);
-    while (1) {
+    keypad(win, 1);
+    std::pair<int, int> direction;
+    bool quit = 0;
+    while (!quit) {
         draw(win, objectMap, snake);
-        char input = getInput(win);
+        input(win, direction, quit);
         tick(snake);
     }
+    delwin(win);
+    endwin();
 }
 
 void draw(WINDOW *win, std::map<std::pair<int, int>, int> objectMap, std::vector<std::pair<int, int>> snake) {
@@ -37,8 +42,25 @@ void draw(WINDOW *win, std::map<std::pair<int, int>, int> objectMap, std::vector
     wrefresh(win);
 }
 
-char getInput(WINDOW *win) {
-    return wgetch(win);
+void input(WINDOW *win, std::pair<int, int> &direction, bool &quit) {
+    int ch = wgetch(win);
+    switch (ch) {
+        case KEY_UP:
+            direction = std::make_pair(0, -1);
+            break;
+        case KEY_DOWN:
+            direction = std::make_pair(0, 1);
+            break;
+        case KEY_LEFT:
+            direction = std::make_pair(-1, 0);
+            break;
+        case KEY_RIGHT:
+            direction = std::make_pair(0, -1);
+            break;
+        case 'q':
+            quit = 1;
+            break;
+    }
 }
 
 void moveSnake(std::vector<std::pair<int, int>> &snake, int x, int y);
