@@ -7,7 +7,7 @@ void draw(WINDOW *win, std::map<std::pair<int, int>, int> objectMap, std::vector
 
 void input(WINDOW *win, std::pair<int, int> &direction, bool &quit);
 
-void tick(std::vector<std::pair<int, int>> &snake);
+void tick(std::vector<std::pair<int, int>> &snake, std::pair<int, int> direction);
 
 void game(std::pair<int, int> size, std::map<std::pair<int, int>, int> objectMap, int startingSize) {
     std::vector<std::pair<int, int>> snake;
@@ -23,7 +23,7 @@ void game(std::pair<int, int> size, std::map<std::pair<int, int>, int> objectMap
     while (!quit) {
         draw(win, objectMap, snake);
         input(win, direction, quit);
-        tick(snake);
+        tick(snake, direction);
     }
     delwin(win);
     endwin();
@@ -55,7 +55,7 @@ void input(WINDOW *win, std::pair<int, int> &direction, bool &quit) {
             direction = std::make_pair(-1, 0);
             break;
         case KEY_RIGHT:
-            direction = std::make_pair(0, -1);
+            direction = std::make_pair(1, 0);
             break;
         case 'q':
             quit = 1;
@@ -63,15 +63,15 @@ void input(WINDOW *win, std::pair<int, int> &direction, bool &quit) {
     }
 }
 
-void moveSnake(std::vector<std::pair<int, int>> &snake, int x, int y);
+void moveSnake(std::vector<std::pair<int, int>> &snake, std::pair<int, int> direction);
 
-void tick(std::vector<std::pair<int, int>> &snake) {
-    moveSnake(snake, 1, 0);
+void tick(std::vector<std::pair<int, int>> &snake, std::pair<int, int> direction) {
+    moveSnake(snake, direction);
 }
 
-void moveSnake(std::vector<std::pair<int, int>> &snake, int x, int y) {
+void moveSnake(std::vector<std::pair<int, int>> &snake, std::pair<int, int> direction) {
     snake.erase(snake.begin());
-    snake.push_back(std::make_pair(snake.back().first + x, snake.back().second + y));
+    snake.push_back(std::make_pair(snake.back().first + direction.first, snake.back().second + direction.second));
 }
 
 int main() {
