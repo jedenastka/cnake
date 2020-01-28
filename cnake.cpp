@@ -1,4 +1,4 @@
-//#include <ncurses.h>
+#include <curses.h>
 #include <utility>
 #include <map>
 #include <vector>
