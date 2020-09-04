@@ -1,7 +1,8 @@
-#include <curses.h>
 #include <utility>
 #include <map>
 #include <vector>
+
+#include <ncurses.h>
 
 void draw(WINDOW *win, std::map<std::pair<int, int>, int> objectMap, std::vector<std::pair<int, int>> snake);
 
